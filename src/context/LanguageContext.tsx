@@ -30,6 +30,7 @@ const translations = {
 }
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
+  console.log('LanguageProvider rendering...')
   const [language, setLanguage] = useState<Language>('he')
   
   const t = (key: string): string => {
