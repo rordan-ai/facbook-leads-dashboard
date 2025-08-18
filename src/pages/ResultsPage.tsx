@@ -103,7 +103,7 @@ export function ResultsPage() {
     setLeads(prev => prev.map((lead, i) => 
       i === index ? { ...lead, status } : lead
     ))
-    setIsDialogOpen(false)
+    closeDialog()
     
     // TODO: שליחה למייק
     console.log('Sending to Mike:', { leadIndex: index, status, lead: leads[index] })
@@ -118,6 +118,11 @@ export function ResultsPage() {
   const openStatusDialog = (leadIndex: number) => {
     setSelectedLead(leadIndex)
     setIsDialogOpen(true)
+  }
+
+  const closeDialog = () => {
+    setIsDialogOpen(false)
+    setSelectedLead(null)
   }
 
   // מיון הלידים - לא רלוונטיים בתחתית
@@ -220,20 +225,22 @@ export function ResultsPage() {
                           </span>
                         )}
                         
-                        <Dialog open={isDialogOpen && selectedLead === actualIndex} onOpenChange={setIsDialogOpen}>
+                        <Dialog open={isDialogOpen && selectedLead === actualIndex} onOpenChange={(open) => {
+                          if (!open) closeDialog()
+                        }}>
                           <DialogTrigger asChild>
                             <Button 
                               variant="outline" 
                               size="sm"
                               onClick={() => openStatusDialog(actualIndex)}
-                              className="border-border hover:bg-accent"
+                              className="border-border hover:bg-accent text-foreground"
                             >
                               {labels.selectStatus}
                             </Button>
                           </DialogTrigger>
-                          <DialogContent className="bg-card border-border">
+                          <DialogContent className="bg-card border-border max-w-sm">
                             <DialogHeader>
-                              <DialogTitle className="text-foreground">
+                              <DialogTitle className="text-foreground text-center">
                                 {labels.selectStatus}
                               </DialogTitle>
                             </DialogHeader>
@@ -241,7 +248,7 @@ export function ResultsPage() {
                               <Button
                                 variant="outline"
                                 onClick={() => updateLeadStatus(actualIndex, 'unchecked')}
-                                className="justify-start border-border hover:bg-accent"
+                                className="justify-start border-border hover:bg-accent text-foreground"
                               >
                                 {labels.unchecked}
                               </Button>
@@ -250,14 +257,14 @@ export function ResultsPage() {
                                 onClick={() => updateLeadStatus(actualIndex, 'relevant')}
                                 className="justify-start bg-green-600/10 border-green-600/30 text-green-300 hover:bg-green-600/20"
                               >
-                                {labels.relevant}
+                                ✓ {labels.relevant}
                               </Button>
                               <Button
                                 variant="outline"
                                 onClick={() => updateLeadStatus(actualIndex, 'irrelevant')}
                                 className="justify-start bg-red-600/10 border-red-600/30 text-red-300 hover:bg-red-600/20"
                               >
-                                {labels.irrelevant}
+                                ✗ {labels.irrelevant}
                               </Button>
                             </div>
                           </DialogContent>

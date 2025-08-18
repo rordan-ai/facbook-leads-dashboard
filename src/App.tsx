@@ -11,7 +11,7 @@ function App() {
   return (
     <LanguageProvider>
       <Router>
-        <div className="min-h-screen bg-background text-foreground">
+        <div className="min-h-screen bg-background text-foreground dark">
           <NavBar />
           <main className="container mx-auto">
             <Routes>

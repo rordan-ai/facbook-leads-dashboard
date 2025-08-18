@@ -69,13 +69,18 @@ serve(async (req) => {
           const headers = publicData.values[0]
           const rows = publicData.values.slice(1)
 
-          const leads = rows.map((row: string[]) => {
-            const lead: any = {}
-            headers.forEach((header: string, index: number) => {
-              lead[header] = row[index] || ''
+          const leads = rows
+            .filter((row: string[]) => {
+              // Filter out empty rows - check if at least one cell has meaningful content
+              return row.some(cell => cell && cell.toString().trim().length > 0)
             })
-            return lead
-          })
+            .map((row: string[]) => {
+              const lead: any = {}
+              headers.forEach((header: string, index: number) => {
+                lead[header] = row[index] || ''
+              })
+              return lead
+            })
 
           console.log(`Successfully processed ${leads.length} leads`)
 
@@ -121,13 +126,18 @@ serve(async (req) => {
     const rows = data.values.slice(1)
 
     // Convert rows to objects using headers as keys
-    const leads = rows.map((row: string[]) => {
-      const lead: any = {}
-      headers.forEach((header: string, index: number) => {
-        lead[header] = row[index] || ''
+    const leads = rows
+      .filter((row: string[]) => {
+        // Filter out empty rows - check if at least one cell has meaningful content
+        return row.some(cell => cell && cell.toString().trim().length > 0)
       })
-      return lead
-    })
+      .map((row: string[]) => {
+        const lead: any = {}
+        headers.forEach((header: string, index: number) => {
+          lead[header] = row[index] || ''
+        })
+        return lead
+      })
 
     console.log(`Successfully processed ${leads.length} leads`)
 
