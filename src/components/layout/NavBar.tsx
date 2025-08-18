@@ -3,7 +3,6 @@ import { useLanguage } from '../../context/LanguageContext'
 import { Button } from '../ui/button'
 
 export function NavBar() {
-  console.log('NavBar rendering...')
   const { language, setLanguage, t } = useLanguage()
 
   return (
