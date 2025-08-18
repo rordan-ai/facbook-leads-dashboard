@@ -13,7 +13,22 @@ serve(async (req) => {
 
   try {
     const GOOGLE_API_KEY = Deno.env.get('GOOGLE_API_KEY')
-    const SHEET_ID = '1e2abbnmnY6OsIsCJvtVo5tFtNlQlUQHSMlU7Jyg29dI'
+    
+    if (!GOOGLE_API_KEY) {
+      console.error('GOOGLE_API_KEY environment variable is not set')
+      return new Response(
+        JSON.stringify({ 
+          error: 'Google API key not configured',
+          details: 'Missing GOOGLE_API_KEY environment variable'
+        }),
+        { 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 500
+        }
+      )
+    }
+    
+    const SHEET_ID = '1e2abbnmnY6OsIsCJvtNlQlUQHSMlU7Jyg29dI'
     const RANGE = 'Sheet1!A:Z' // Read all columns from row 1 onwards
 
     console.log('Fetching leads from Google Sheets...')
@@ -23,8 +38,24 @@ serve(async (req) => {
     const response = await fetch(url)
     
     if (!response.ok) {
-      console.error('Google Sheets API error:', response.status, response.statusText)
-      throw new Error(`Google Sheets API error: ${response.status}`)
+      const errorText = await response.text()
+      console.error('Google Sheets API error:', response.status, response.statusText, errorText)
+      
+      if (response.status === 400) {
+        return new Response(
+          JSON.stringify({ 
+            error: 'Google Sheets access denied',
+            details: 'הגיליון צריך להיות פומבי או שמפתח ה-API לא תקין. אנא וודא שהגיליון זמין לקריאה ציבורית.',
+            status: response.status
+          }),
+          { 
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            status: 400
+          }
+        )
+      }
+      
+      throw new Error(`Google Sheets API error: ${response.status} - ${errorText}`)
     }
 
     const data = await response.json()

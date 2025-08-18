@@ -72,7 +72,7 @@ export function ResultsPage() {
       <div className={`container mx-auto px-4 py-8 ${isHebrew ? 'rtl' : 'ltr'}`}>
         <Card>
           <CardHeader>
-            <CardTitle className="text-red-600">
+            <CardTitle className="text-destructive">
               {isHebrew ? 'שגיאה' : 'Error'}
             </CardTitle>
           </CardHeader>
