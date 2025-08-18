@@ -14,48 +14,93 @@ serve(async (req) => {
   try {
     const GOOGLE_API_KEY = Deno.env.get('GOOGLE_API_KEY')
     
-    if (!GOOGLE_API_KEY) {
-      console.error('GOOGLE_API_KEY environment variable is not set')
-      return new Response(
-        JSON.stringify({ 
-          error: 'Google API key not configured',
-          details: 'Missing GOOGLE_API_KEY environment variable'
-        }),
-        { 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          status: 500
-        }
-      )
-    }
+    console.log('GOOGLE_API_KEY exists:', !!GOOGLE_API_KEY)
     
     const SHEET_ID = '1e2abbnmnY6OsIsCJvtVo5tFtNlQlUQHSMlU7Jyg29dI'
-    const RANGE = 'Sheet1!A:Z' // Read all columns from row 1 onwards
+    const RANGE = 'Sheet1!A:Z'
 
     console.log('Fetching leads from Google Sheets...')
+    console.log('Sheet ID:', SHEET_ID)
+    console.log('Range:', RANGE)
     
-    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${RANGE}?key=${GOOGLE_API_KEY}`
+    // Try both with and without API key for public sheets
+    let url
+    if (GOOGLE_API_KEY) {
+      url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${RANGE}?key=${GOOGLE_API_KEY}`
+    } else {
+      // For public sheets, try without API key first
+      url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${RANGE}`
+    }
+    
+    console.log('Request URL:', url)
     
     const response = await fetch(url)
     
+    console.log('Response status:', response.status)
+    console.log('Response statusText:', response.statusText)
+    
     if (!response.ok) {
       const errorText = await response.text()
-      console.error('Google Sheets API error:', response.status, response.statusText, errorText)
+      console.error('Google Sheets API error details:', errorText)
       
-      if (response.status === 400) {
-        return new Response(
-          JSON.stringify({ 
-            error: 'Google Sheets access denied',
-            details: 'הגיליון צריך להיות פומבי או שמפתח ה-API לא תקין. אנא וודא שהגיליון זמין לקריאה ציבורית.',
-            status: response.status
-          }),
-          { 
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-            status: 400
+      // If API key failed, try without it for public sheets
+      if (response.status === 400 && GOOGLE_API_KEY) {
+        console.log('Trying without API key for public sheet...')
+        const publicUrl = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${RANGE}`
+        console.log('Public URL:', publicUrl)
+        
+        const publicResponse = await fetch(publicUrl)
+        console.log('Public response status:', publicResponse.status)
+        
+        if (publicResponse.ok) {
+          const publicData = await publicResponse.json()
+          console.log('Successfully fetched with public access')
+          
+          if (!publicData.values || publicData.values.length === 0) {
+            return new Response(
+              JSON.stringify({ leads: [], message: 'No data found in sheet' }),
+              { 
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+                status: 200
+              }
+            )
           }
-        )
+
+          const headers = publicData.values[0]
+          const rows = publicData.values.slice(1)
+
+          const leads = rows.map((row: string[]) => {
+            const lead: any = {}
+            headers.forEach((header: string, index: number) => {
+              lead[header] = row[index] || ''
+            })
+            return lead
+          })
+
+          console.log(`Successfully processed ${leads.length} leads`)
+
+          return new Response(
+            JSON.stringify({ leads, total: leads.length }),
+            { 
+              headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+              status: 200
+            }
+          )
+        }
       }
       
-      throw new Error(`Google Sheets API error: ${response.status} - ${errorText}`)
+      return new Response(
+        JSON.stringify({ 
+          error: 'Google Sheets access failed',
+          details: `שגיאה בגישה לגיליון: ${response.status} - ${errorText}. אנא וודא שהגיליון פתוח לקריאה ציבורית.`,
+          status: response.status,
+          url: url
+        }),
+        { 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: response.status
+        }
+      )
     }
 
     const data = await response.json()
