@@ -96,7 +96,7 @@ const mockCandidates: Candidate[] = [
 ]
 
 export function CandidatesPage() {
-  const { language, setLanguage } = useLanguage()
+  const { language } = useLanguage()
   const [searchTerm, setSearchTerm] = useState('')
 
   const isHebrew = language === 'he'
@@ -116,43 +116,36 @@ export function CandidatesPage() {
   }
 
   return (
-    <div className={`min-h-screen bg-slate-900 ${isHebrew ? 'rtl' : 'ltr'}`}>
+    <div className={`min-h-screen bg-slate-900 text-white ${isHebrew ? 'rtl' : 'ltr'}`}>
       {/* Header */}
-      <div className="bg-slate-800 border-b border-slate-700">
-        <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
-          {/* Left side - Menu items */}
+      <div className="bg-slate-800 border-b border-slate-700 p-4">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-6">
-            <button className="text-white hover:text-gray-300">🌙</button>
-            <button className="text-white hover:text-gray-300">⚙️</button>
-            <button className="text-white hover:text-gray-300">📝 תוצאות</button>
-            <button className="text-white hover:text-gray-300">👤 מועמדים(57)</button>
+            <button className="text-white hover:text-gray-300">Settings</button>
+            <button className="text-white hover:text-gray-300">Results</button>
+            <button className="text-white hover:text-gray-300 font-semibold">Candidates (57)</button>
           </div>
-
-          {/* Right side - Title and Logo */}
-          <div className="flex items-center gap-4">
+          <div className="text-center">
             <h1 className="text-2xl font-bold text-white">
               שבלולי - אוטומציה לגיוס עובדים
             </h1>
-            <div className="text-3xl">🐌</div>
           </div>
         </div>
       </div>
 
       {/* Search Bar */}
       <div className="bg-slate-700 p-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-center gap-4">
-            <label className="text-white font-medium whitespace-nowrap">
-              חיפוש מועמד:
-            </label>
-            <Input
-              type="text"
-              placeholder="חפש לפי שם, אימייל, טל"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="flex-1 bg-slate-600 border-slate-500 text-white placeholder:text-slate-400"
-            />
-          </div>
+        <div className="max-w-7xl mx-auto flex items-center gap-4">
+          <label className="text-white font-medium whitespace-nowrap">
+            חיפוש מועמד:
+          </label>
+          <Input
+            type="text"
+            placeholder="חפש לפי שם, אימייל, טלפון..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="flex-1 bg-slate-600 border-slate-500 text-white placeholder:text-slate-400"
+          />
         </div>
       </div>
 
@@ -162,15 +155,13 @@ export function CandidatesPage() {
           {filteredCandidates.map((candidate) => (
             <Card key={candidate.id} className="bg-slate-800 border-slate-700 text-white">
               <CardHeader className="pb-2">
-                {/* Name and timestamp */}
                 <div className="text-center mb-3">
                   <h3 className="text-xl font-bold mb-2">{candidate.name}</h3>
                   <div className="bg-slate-600 rounded px-3 py-1 text-sm text-slate-300 inline-block">
-                    {candidate.date} {candidate.time} ⏰
+                    {candidate.date} {candidate.time}
                   </div>
                 </div>
 
-                {/* Status tags */}
                 <div className="flex flex-wrap gap-2 justify-center mb-3">
                   {candidate.tags.map((tag, tagIndex) => (
                     <span 
@@ -182,41 +173,37 @@ export function CandidatesPage() {
                   ))}
                 </div>
 
-                {/* Source */}
                 <div className="text-center text-slate-300 text-sm mb-3">
-                  📊 {candidate.source}
+                  {candidate.source}
                 </div>
               </CardHeader>
               
               <CardContent className="pt-0">
-                {/* Contact Info */}
                 <div className="space-y-2 mb-4">
                   <div className="flex items-center gap-2 text-sm">
-                    <span>📧</span>
+                    <span>Email:</span>
                     <a href={`mailto:${candidate.email}`} className="text-blue-400 hover:underline break-all">
                       {candidate.email}
                     </a>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
-                    <span>📞</span>
+                    <span>Phone:</span>
                     <a href={`tel:${candidate.phone}`} className="text-blue-400 hover:underline">
                       {candidate.phone}
                     </a>
                   </div>
                 </div>
 
-                {/* Notes section */}
                 <div className="bg-blue-600 text-white p-3 rounded mb-4 text-center">
                   <div className="font-medium text-sm mb-1">הערות:</div>
                   <div className="text-sm">{candidate.notes}</div>
                 </div>
 
-                {/* Action buttons */}
                 <div className="flex gap-2">
                   <Button 
                     variant="outline" 
                     size="sm" 
-                    className="flex-1 bg-white text-black border-white hover:bg-gray-100 font-medium"
+                    className="flex-1 bg-white text-black border-white hover:bg-gray-100"
                   >
                     עדכן סטטוס
                   </Button>
@@ -225,7 +212,7 @@ export function CandidatesPage() {
                     size="sm"
                     className="flex-1 bg-slate-700 text-white border-slate-600 hover:bg-slate-600"
                   >
-                    💬 צפה בצ'אט
+                    צפה בצ'אט
                   </Button>
                 </div>
               </CardContent>
