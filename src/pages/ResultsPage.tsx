@@ -258,61 +258,59 @@ export function ResultsPage() {
                     💬 {labels.viewChat}
                   </Button>
                 </div>
-
-                {/* Status Dialog */}
-                <Dialog open={isDialogOpen && selectedCandidate === index} onOpenChange={(open) => {
-                  if (!open) closeDialog()
-                }}>
-                  <DialogContent className="bg-slate-800 border-slate-700 text-white max-w-sm">
-                    <DialogHeader>
-                      <DialogTitle className="text-center">
-                        {labels.selectStatus}
-                      </DialogTitle>
-                    </DialogHeader>
-                    <div className="grid gap-3 pt-4">
-                      <Button
-                        variant="outline"
-                        onClick={() => updateCandidateStatus(index, 'unchecked')}
-                        className="justify-start bg-gray-600/20 border-gray-600/30 text-gray-300 hover:bg-gray-600/30"
-                      >
-                        {labels.unchecked}
-                      </Button>
-                      <Button
-                        variant="outline"
-                        onClick={() => updateCandidateStatus(index, 'relevant')}
-                        className="justify-start bg-blue-600/20 border-blue-600/30 text-blue-300 hover:bg-blue-600/30"
-                      >
-                        ✓ {labels.relevant}
-                      </Button>
-                      <Button
-                        variant="outline"
-                        onClick={() => updateCandidateStatus(index, 'interview')}
-                        className="justify-start bg-orange-600/20 border-orange-600/30 text-orange-300 hover:bg-orange-600/30"
-                      >
-                        👥 {labels.interview}
-                      </Button>
-                      <Button
-                        variant="outline"
-                        onClick={() => updateCandidateStatus(index, 'hired')}
-                        className="justify-start bg-green-600/20 border-green-600/30 text-green-300 hover:bg-green-600/30"
-                      >
-                        ✅ {labels.hired}
-                      </Button>
-                      <Button
-                        variant="outline"
-                        onClick={() => updateCandidateStatus(index, 'irrelevant')}
-                        className="justify-start bg-red-600/20 border-red-600/30 text-red-300 hover:bg-red-600/30"
-                      >
-                        ✗ {labels.irrelevant}
-                      </Button>
-                    </div>
-                  </DialogContent>
-                </Dialog>
               </CardContent>
             </Card>
           ))}
         </div>
       </div>
+
+      {/* Status Dialog */}
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="bg-slate-800 border-slate-700 text-white max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="text-center">
+              {labels.selectStatus}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-3 pt-4">
+            <Button
+              variant="outline"
+              onClick={() => selectedCandidate !== null && updateCandidateStatus(selectedCandidate, 'unchecked')}
+              className="justify-start bg-gray-600/20 border-gray-600/30 text-gray-300 hover:bg-gray-600/30"
+            >
+              {labels.unchecked}
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => selectedCandidate !== null && updateCandidateStatus(selectedCandidate, 'relevant')}
+              className="justify-start bg-blue-600/20 border-blue-600/30 text-blue-300 hover:bg-blue-600/30"
+            >
+              ✓ {labels.relevant}
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => selectedCandidate !== null && updateCandidateStatus(selectedCandidate, 'interview')}
+              className="justify-start bg-orange-600/20 border-orange-600/30 text-orange-300 hover:bg-orange-600/30"
+            >
+              👥 {labels.interview}
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => selectedCandidate !== null && updateCandidateStatus(selectedCandidate, 'hired')}
+              className="justify-start bg-green-600/20 border-green-600/30 text-green-300 hover:bg-green-600/30"
+            >
+              ✅ {labels.hired}
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => selectedCandidate !== null && updateCandidateStatus(selectedCandidate, 'irrelevant')}
+              className="justify-start bg-red-600/20 border-red-600/30 text-red-300 hover:bg-red-600/30"
+            >
+              ✗ {labels.irrelevant}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
