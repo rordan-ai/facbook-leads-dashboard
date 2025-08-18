@@ -4,7 +4,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../co
 import { Button } from '../components/ui/button'
 
 export function ResultsPage() {
+  console.log('ResultsPage component is rendering...')
   const { t, language } = useLanguage()
+  console.log('Current language:', language)
 
   const isHebrew = language === 'he'
 
