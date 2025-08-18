@@ -1,8 +1,4 @@
 import React, { useState } from 'react'
-import { useLanguage } from '../context/LanguageContext'
-import { Button } from '../components/ui/button'
-import { Input } from '../components/ui/input'
-import { Card, CardContent, CardHeader } from '../components/ui/card'
 
 interface Candidate {
   id: number
@@ -52,7 +48,7 @@ const mockCandidates: Candidate[] = [
     status: 'relevant',
     notes: 'קיום מגורים באר שבע',
     tags: [{ text: 'תל אביב', color: 'orange' }],
-    source: 'הגיע מקליקפין'
+    source: 'הגיע מקליקפين'
   },
   {
     id: 4,
@@ -96,10 +92,7 @@ const mockCandidates: Candidate[] = [
 ]
 
 export function CandidatesPage() {
-  const { language } = useLanguage()
   const [searchTerm, setSearchTerm] = useState('')
-
-  const isHebrew = language === 'he'
 
   const filteredCandidates = mockCandidates.filter(candidate =>
     candidate.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -109,21 +102,21 @@ export function CandidatesPage() {
 
   const getTagColor = (color: string) => {
     switch(color) {
-      case 'orange': return 'bg-orange-500/20 text-orange-300 border-orange-500/30'
-      case 'gray': return 'bg-gray-500/20 text-gray-300 border-gray-500/30'
-      default: return 'bg-blue-500/20 text-blue-300 border-blue-500/30'
+      case 'orange': return 'bg-orange-500 bg-opacity-20 text-orange-300 border border-orange-500 border-opacity-30'
+      case 'gray': return 'bg-gray-500 bg-opacity-20 text-gray-300 border border-gray-500 border-opacity-30'
+      default: return 'bg-blue-500 bg-opacity-20 text-blue-300 border border-blue-500 border-opacity-30'
     }
   }
 
   return (
-    <div className={`min-h-screen bg-slate-900 text-white ${isHebrew ? 'rtl' : 'ltr'}`}>
+    <div className="min-h-screen bg-gray-900 text-white" dir="rtl">
       {/* Header */}
-      <div className="bg-slate-800 border-b border-slate-700 p-4">
+      <div className="bg-gray-800 border-b border-gray-700 p-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-6">
-            <button className="text-white hover:text-gray-300">Settings</button>
-            <button className="text-white hover:text-gray-300">Results</button>
-            <button className="text-white hover:text-gray-300 font-semibold">Candidates (57)</button>
+            <button className="text-white hover:text-gray-300 px-4 py-2">Settings</button>
+            <button className="text-white hover:text-gray-300 px-4 py-2">Results</button>
+            <button className="text-white hover:text-gray-300 font-semibold px-4 py-2">Candidates (57)</button>
           </div>
           <div className="text-center">
             <h1 className="text-2xl font-bold text-white">
@@ -134,17 +127,17 @@ export function CandidatesPage() {
       </div>
 
       {/* Search Bar */}
-      <div className="bg-slate-700 p-4">
+      <div className="bg-gray-700 p-4">
         <div className="max-w-7xl mx-auto flex items-center gap-4">
           <label className="text-white font-medium whitespace-nowrap">
             חיפוש מועמד:
           </label>
-          <Input
+          <input
             type="text"
             placeholder="חפש לפי שם, אימייל, טלפון..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="flex-1 bg-slate-600 border-slate-500 text-white placeholder:text-slate-400"
+            className="flex-1 bg-gray-600 border border-gray-500 text-white placeholder-gray-400 rounded-md px-3 py-2"
           />
         </div>
       </div>
@@ -153,11 +146,11 @@ export function CandidatesPage() {
       <div className="max-w-7xl mx-auto p-6">
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {filteredCandidates.map((candidate) => (
-            <Card key={candidate.id} className="bg-slate-800 border-slate-700 text-white">
-              <CardHeader className="pb-2">
+            <div key={candidate.id} className="bg-gray-800 border border-gray-700 rounded-lg p-6 text-white">
+              <div className="pb-2">
                 <div className="text-center mb-3">
                   <h3 className="text-xl font-bold mb-2">{candidate.name}</h3>
-                  <div className="bg-slate-600 rounded px-3 py-1 text-sm text-slate-300 inline-block">
+                  <div className="bg-gray-600 rounded px-3 py-1 text-sm text-gray-300 inline-block">
                     {candidate.date} {candidate.time}
                   </div>
                 </div>
@@ -166,19 +159,19 @@ export function CandidatesPage() {
                   {candidate.tags.map((tag, tagIndex) => (
                     <span 
                       key={tagIndex}
-                      className={`${getTagColor(tag.color)} px-3 py-1 rounded-full text-sm border`}
+                      className={`${getTagColor(tag.color)} px-3 py-1 rounded-full text-sm`}
                     >
                       {tag.text}
                     </span>
                   ))}
                 </div>
 
-                <div className="text-center text-slate-300 text-sm mb-3">
+                <div className="text-center text-gray-300 text-sm mb-3">
                   {candidate.source}
                 </div>
-              </CardHeader>
+              </div>
               
-              <CardContent className="pt-0">
+              <div className="pt-0">
                 <div className="space-y-2 mb-4">
                   <div className="flex items-center gap-2 text-sm">
                     <span>Email:</span>
@@ -200,23 +193,15 @@ export function CandidatesPage() {
                 </div>
 
                 <div className="flex gap-2">
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="flex-1 bg-white text-black border-white hover:bg-gray-100"
-                  >
+                  <button className="flex-1 bg-white text-black border border-white hover:bg-gray-100 rounded px-3 py-2 text-sm">
                     עדכן סטטוס
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    className="flex-1 bg-slate-700 text-white border-slate-600 hover:bg-slate-600"
-                  >
+                  </button>
+                  <button className="flex-1 bg-gray-700 text-white border border-gray-600 hover:bg-gray-600 rounded px-3 py-2 text-sm">
                     צפה בצ'אט
-                  </Button>
+                  </button>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           ))}
         </div>
       </div>
