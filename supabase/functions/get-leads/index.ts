@@ -17,7 +17,7 @@ serve(async (req) => {
     console.log('GOOGLE_API_KEY exists:', !!GOOGLE_API_KEY)
     
     const SHEET_ID = '1e2abbnmnY6OsIsCJvtVo5tFtNlQlUQHSMlU7Jyg29dI'
-    const RANGE = 'Sheet1!A:Z'
+    const RANGE = 'A:Z' // Simplified range format
 
     console.log('Fetching leads from Google Sheets...')
     console.log('Sheet ID:', SHEET_ID)
