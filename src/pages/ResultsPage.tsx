@@ -3,8 +3,7 @@ import { useLanguage } from '../context/LanguageContext'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import { Button } from '../components/ui/button'
 import { Textarea } from '../components/ui/textarea'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../components/ui/dialog'
-import { Input } from '../components/ui/input'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../components/ui/dialog'
 
 interface Candidate {
   id: number
@@ -131,6 +130,7 @@ const getStatusColor = (status: string) => {
 }
 
 export function ResultsPage() {
+  console.log('ResultsPage rendering - NEW VERSION')
   const { t, language } = useLanguage()
   const [candidates, setCandidates] = useState<Candidate[]>(mockCandidates)
   const [searchTerm, setSearchTerm] = useState('')
@@ -154,12 +154,6 @@ export function ResultsPage() {
     closeDialog()
   }
 
-  const updateCandidateNotes = (index: number, notes: string) => {
-    setCandidates(prev => prev.map((candidate, i) => 
-      i === index ? { ...candidate, notes } : candidate
-    ))
-  }
-
   const openStatusDialog = (candidateIndex: number) => {
     setSelectedCandidate(candidateIndex)
     setIsDialogOpen(true)
@@ -181,12 +175,12 @@ export function ResultsPage() {
           
           {/* Search Bar */}
           <div className="bg-slate-700 p-3 rounded-lg">
-            <Input
+            <input
               type="text"
               placeholder="חפש לפי שם, אימייל, טל"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-slate-600 border-slate-500 text-white placeholder-slate-400"
+              className="w-full bg-slate-600 border border-slate-500 text-white placeholder-slate-400 rounded px-3 py-2"
             />
           </div>
           
