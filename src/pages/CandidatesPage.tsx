@@ -2,76 +2,235 @@ import React, { useState } from 'react'
 import { useLanguage } from '../context/LanguageContext'
 import { Button } from '../components/ui/button'
 import { Input } from '../components/ui/input'
+import { Card, CardContent, CardHeader } from '../components/ui/card'
+
+interface Candidate {
+  id: number
+  name: string
+  phone: string
+  email: string
+  date: string
+  time: string
+  status: string
+  notes: string
+  tags: { text: string; color: string }[]
+  source: string
+}
+
+const mockCandidates: Candidate[] = [
+  {
+    id: 1,
+    name: 'סינה כהן',
+    phone: '972544886569',
+    email: 'sinayac8@gmail.com',
+    date: '08/18/2025',
+    time: '9:29am',
+    status: 'interview',
+    notes: 'ראשון לציון',
+    tags: [{ text: 'השקפה', color: 'orange' }],
+    source: 'הגיע מקליקפין'
+  },
+  {
+    id: 2,
+    name: 'Gilat Amon',
+    phone: '972523300420',
+    email: 'gilatam40@gmail.com',
+    date: '08/18/2025',
+    time: '9:51am',
+    status: 'relevant',
+    notes: 'פתח תקווה',
+    tags: [{ text: 'תל אביב', color: 'orange' }],
+    source: 'הגיע מקליקפין'
+  },
+  {
+    id: 3,
+    name: 'Almaz Almaz',
+    phone: '972534283788',
+    email: 'lmzl60008@gamil.com',
+    date: '08/18/2025',
+    time: '10:32am',
+    status: 'relevant',
+    notes: 'קיום מגורים באר שבע',
+    tags: [{ text: 'תל אביב', color: 'orange' }],
+    source: 'הגיע מקליקפין'
+  },
+  {
+    id: 4,
+    name: 'Ayala Nazukaro Herman',
+    phone: '972543302003',
+    email: 'nazukaro@walla.com',
+    date: '26/05/2025',
+    time: '14:05',
+    status: 'unchecked',
+    notes: 'הקליק להחלפת הערה...',
+    tags: [{ text: 'יעקב פאר', color: 'gray' }],
+    source: 'הגיע מקליקפין'
+  },
+  {
+    id: 5,
+    name: 'דרין חוג',
+    phone: '972507755216',
+    email: 'darink1612@gmail.com',
+    date: '26/05/2025',
+    time: '11:34',
+    status: 'unchecked',
+    notes: 'הקליק להחלפת הערה...',
+    tags: [
+      { text: 'חיפה ק', color: 'gray' },
+      { text: 'ים פאי קמפיין', color: 'gray' }
+    ],
+    source: 'הגיע מקליקפין'
+  },
+  {
+    id: 6,
+    name: 'TAIR AMOS',
+    phone: '972527430380',
+    email: 'Amostair@gmail.com',
+    date: '08/18/2025',
+    time: '8:49am',
+    status: 'relevant',
+    notes: 'הערות',
+    tags: [{ text: 'תל אביב', color: 'orange' }],
+    source: 'הגיע מקליקפין'
+  }
+]
 
 export function CandidatesPage() {
   const { language, setLanguage } = useLanguage()
   const [searchTerm, setSearchTerm] = useState('')
-  const [isDarkMode, setIsDarkMode] = useState(false) // התחל במצב בהיר
 
   const isHebrew = language === 'he'
 
-  const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode)
+  const filteredCandidates = mockCandidates.filter(candidate =>
+    candidate.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    candidate.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    candidate.phone.includes(searchTerm)
+  )
+
+  const getTagColor = (color: string) => {
+    switch(color) {
+      case 'orange': return 'bg-orange-500/20 text-orange-300 border-orange-500/30'
+      case 'gray': return 'bg-gray-500/20 text-gray-300 border-gray-500/30'
+      default: return 'bg-blue-500/20 text-blue-300 border-blue-500/30'
+    }
   }
 
   return (
-    <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'} ${isHebrew ? 'rtl' : 'ltr'}`}>
+    <div className={`min-h-screen bg-slate-900 ${isHebrew ? 'rtl' : 'ltr'}`}>
       {/* Header */}
-      <div className="flex items-center justify-between p-6 bg-white">
-        {/* Logo */}
-        <div className="flex items-center">
-          <div className="text-6xl mr-4">🐌</div>
-        </div>
+      <div className="bg-slate-800 border-b border-slate-700">
+        <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
+          {/* Left side - Menu items */}
+          <div className="flex items-center gap-6">
+            <button className="text-white hover:text-gray-300">🌙</button>
+            <button className="text-white hover:text-gray-300">⚙️</button>
+            <button className="text-white hover:text-gray-300">📝 תוצאות</button>
+            <button className="text-white hover:text-gray-300">👤 מועמדים(57)</button>
+          </div>
 
-        {/* Title and Controls */}
-        <div className="flex flex-col items-end gap-4">
-          <h1 className="text-2xl font-bold text-black">
-            שבלולי - אוטומציה לגיוס עובדים
-          </h1>
-          
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setLanguage(language === 'he' ? 'en' : 'he')}
-              className="border-gray-300 text-gray-700 hover:bg-gray-100"
-            >
-              {language === 'he' ? 'English' : 'עברית'}
-            </Button>
-            
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={toggleTheme}
-              className="border-gray-300 text-gray-700 hover:bg-gray-100"
-            >
-              🌙 החלף ערכת נושא
-            </Button>
+          {/* Right side - Title and Logo */}
+          <div className="flex items-center gap-4">
+            <h1 className="text-2xl font-bold text-white">
+              שבלולי - אוטומציה לגיוס עובדים
+            </h1>
+            <div className="text-3xl">🐌</div>
           </div>
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="max-w-4xl mx-auto p-6">
-        {/* Search Section */}
-        <div className="mb-8">
-          <label className="block text-lg font-medium mb-2 text-black">
-            חיפוש מועמד:
-          </label>
-          <Input
-            type="text"
-            placeholder="שם, אימייל, טלפון"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-white border-gray-300 text-gray-900 placeholder:text-gray-500"
-          />
+      {/* Search Bar */}
+      <div className="bg-slate-700 p-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center gap-4">
+            <label className="text-white font-medium whitespace-nowrap">
+              חיפוש מועמד:
+            </label>
+            <Input
+              type="text"
+              placeholder="חפש לפי שם, אימייל, טל"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="flex-1 bg-slate-600 border-slate-500 text-white placeholder:text-slate-400"
+            />
+          </div>
         </div>
+      </div>
 
-        {/* Results Area */}
-        <div className="text-center">
-          <p className="text-lg text-gray-700">
-            לא נמצאו מועמדים התואמים לחיפוש שלך.
-          </p>
+      {/* Candidates Grid */}
+      <div className="max-w-7xl mx-auto p-6">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {filteredCandidates.map((candidate) => (
+            <Card key={candidate.id} className="bg-slate-800 border-slate-700 text-white">
+              <CardHeader className="pb-2">
+                {/* Name and timestamp */}
+                <div className="text-center mb-3">
+                  <h3 className="text-xl font-bold mb-2">{candidate.name}</h3>
+                  <div className="bg-slate-600 rounded px-3 py-1 text-sm text-slate-300 inline-block">
+                    {candidate.date} {candidate.time} ⏰
+                  </div>
+                </div>
+
+                {/* Status tags */}
+                <div className="flex flex-wrap gap-2 justify-center mb-3">
+                  {candidate.tags.map((tag, tagIndex) => (
+                    <span 
+                      key={tagIndex}
+                      className={`${getTagColor(tag.color)} px-3 py-1 rounded-full text-sm border`}
+                    >
+                      {tag.text}
+                    </span>
+                  ))}
+                </div>
+
+                {/* Source */}
+                <div className="text-center text-slate-300 text-sm mb-3">
+                  📊 {candidate.source}
+                </div>
+              </CardHeader>
+              
+              <CardContent className="pt-0">
+                {/* Contact Info */}
+                <div className="space-y-2 mb-4">
+                  <div className="flex items-center gap-2 text-sm">
+                    <span>📧</span>
+                    <a href={`mailto:${candidate.email}`} className="text-blue-400 hover:underline break-all">
+                      {candidate.email}
+                    </a>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm">
+                    <span>📞</span>
+                    <a href={`tel:${candidate.phone}`} className="text-blue-400 hover:underline">
+                      {candidate.phone}
+                    </a>
+                  </div>
+                </div>
+
+                {/* Notes section */}
+                <div className="bg-blue-600 text-white p-3 rounded mb-4 text-center">
+                  <div className="font-medium text-sm mb-1">הערות:</div>
+                  <div className="text-sm">{candidate.notes}</div>
+                </div>
+
+                {/* Action buttons */}
+                <div className="flex gap-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="flex-1 bg-white text-black border-white hover:bg-gray-100 font-medium"
+                  >
+                    עדכן סטטוס
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    className="flex-1 bg-slate-700 text-white border-slate-600 hover:bg-slate-600"
+                  >
+                    💬 צפה בצ'אט
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
       </div>
     </div>
