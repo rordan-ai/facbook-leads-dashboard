@@ -8,13 +8,11 @@ function App() {
   return (
     <LanguageProvider>
       <Router>
-        <div className="min-h-screen bg-background text-foreground">
+        <div className="min-h-screen">
           <NavBar />
-          <main>
-            <Routes>
-              <Route path="/" element={<ResultsPage />} />
-            </Routes>
-          </main>
+          <Routes>
+            <Route path="/" element={<ResultsPage />} />
+          </Routes>
         </div>
       </Router>
     </LanguageProvider>
