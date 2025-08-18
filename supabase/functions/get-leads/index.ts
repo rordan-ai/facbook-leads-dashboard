@@ -28,7 +28,7 @@ serve(async (req) => {
       )
     }
     
-    const SHEET_ID = '1e2abbnmnY6OsIsCJvtNlQlUQHSMlU7Jyg29dI'
+    const SHEET_ID = '1e2abbnmnY6OsIsCJvtVo5tFtNlQlUQHSMlU7Jyg29dI'
     const RANGE = 'Sheet1!A:Z' // Read all columns from row 1 onwards
 
     console.log('Fetching leads from Google Sheets...')
