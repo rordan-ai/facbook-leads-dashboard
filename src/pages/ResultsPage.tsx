@@ -226,49 +226,50 @@ export function ResultsPage() {
                         )}
                         
                         <Dialog open={isDialogOpen && selectedLead === actualIndex} onOpenChange={(open) => {
-                          if (!open) closeDialog()
-                        }}>
-                          <DialogTrigger asChild>
-                            <Button 
-                              variant="outline" 
-                              size="sm"
-                              onClick={() => openStatusDialog(actualIndex)}
-                              className="border-border hover:bg-accent text-foreground"
-                            >
-                              {labels.selectStatus}
-                            </Button>
-                          </DialogTrigger>
-                          <DialogContent className="bg-card border-border max-w-sm">
-                            <DialogHeader>
-                              <DialogTitle className="text-foreground text-center">
-                                {labels.selectStatus}
-                              </DialogTitle>
-                            </DialogHeader>
-                            <div className="grid gap-3 pt-4">
-                              <Button
-                                variant="outline"
-                                onClick={() => updateLeadStatus(actualIndex, 'unchecked')}
-                                className="justify-start border-border hover:bg-accent text-foreground"
-                              >
-                                {labels.unchecked}
-                              </Button>
-                              <Button
-                                variant="outline"
-                                onClick={() => updateLeadStatus(actualIndex, 'relevant')}
-                                className="justify-start bg-green-600/10 border-green-600/30 text-green-300 hover:bg-green-600/20"
-                              >
-                                ✓ {labels.relevant}
-                              </Button>
-                              <Button
-                                variant="outline"
-                                onClick={() => updateLeadStatus(actualIndex, 'irrelevant')}
-                                className="justify-start bg-red-600/10 border-red-600/30 text-red-300 hover:bg-red-600/20"
-                              >
-                                ✗ {labels.irrelevant}
-                              </Button>
-                            </div>
-                          </DialogContent>
-                        </Dialog>
+                           if (!open) closeDialog()
+                           else openStatusDialog(actualIndex)
+                         }}>
+                           <DialogTrigger asChild>
+                             <Button 
+                               variant="outline" 
+                               size="sm"
+                               onClick={() => openStatusDialog(actualIndex)}
+                               className="border-border hover:bg-accent text-foreground"
+                             >
+                               {labels.selectStatus}
+                             </Button>
+                           </DialogTrigger>
+                           <DialogContent className="bg-card border-border max-w-sm">
+                             <DialogHeader>
+                               <DialogTitle className="text-foreground text-center">
+                                 {labels.selectStatus}
+                               </DialogTitle>
+                             </DialogHeader>
+                             <div className="grid gap-3 pt-4">
+                               <Button
+                                 variant="outline"
+                                 onClick={() => updateLeadStatus(actualIndex, 'unchecked')}
+                                 className="justify-start border-border hover:bg-accent text-foreground"
+                               >
+                                 {labels.unchecked}
+                               </Button>
+                               <Button
+                                 variant="outline"
+                                 onClick={() => updateLeadStatus(actualIndex, 'relevant')}
+                                 className="justify-start bg-green-600/10 border-green-600/30 text-green-300 hover:bg-green-600/20"
+                               >
+                                 ✓ {labels.relevant}
+                               </Button>
+                               <Button
+                                 variant="outline"
+                                 onClick={() => updateLeadStatus(actualIndex, 'irrelevant')}
+                                 className="justify-start bg-red-600/10 border-red-600/30 text-red-300 hover:bg-red-600/20"
+                               >
+                                 ✗ {labels.irrelevant}
+                               </Button>
+                             </div>
+                           </DialogContent>
+                         </Dialog>
                       </div>
                     </div>
                   </div>
@@ -276,15 +277,38 @@ export function ResultsPage() {
                 
                 <CardContent className="space-y-4">
                   {/* פרטי הליד */}
-                  <div className="space-y-2">
-                    {Object.entries(lead).filter(([key]) => !['status', 'notes'].includes(key)).map(([key, value]) => (
-                      <div key={key} className="flex flex-col sm:flex-row gap-1 text-sm border-b border-border/30 pb-1 last:border-0">
-                        <span className="font-medium text-muted-foreground sm:min-w-[120px] sm:max-w-[120px]">
-                          {key}:
-                        </span>
-                        <span className="break-words flex-1 text-foreground">{value}</span>
-                      </div>
-                    ))}
+                   <div className="space-y-2">
+                     {Object.entries(lead).filter(([key]) => !['status', 'notes'].includes(key)).map(([key, value]) => {
+                       const isPhone = key === 'טלפון' || key.toLowerCase().includes('phone') || /^\d+$/.test(value);
+                       const isEmail = key === 'אי מייל' || key === 'אימייל' || key.toLowerCase().includes('email') || key.toLowerCase().includes('mail') || (typeof value === 'string' && value.includes('@'));
+                       
+                       return (
+                         <div key={key} className="flex flex-col sm:flex-row gap-1 text-sm border-b border-border/30 pb-1 last:border-0">
+                           <span className="font-medium text-muted-foreground sm:min-w-[120px] sm:max-w-[120px]">
+                             {key}:
+                           </span>
+                           <span className="break-words flex-1 text-foreground">
+                             {isPhone ? (
+                               <a 
+                                 href={`tel:${value}`} 
+                                 className="text-primary hover:underline cursor-pointer"
+                               >
+                                 {value}
+                               </a>
+                             ) : isEmail ? (
+                               <a 
+                                 href={`mailto:${value}`} 
+                                 className="text-primary hover:underline cursor-pointer"
+                               >
+                                 {value}
+                               </a>
+                             ) : (
+                               value
+                             )}
+                           </span>
+                         </div>
+                       );
+                     })}
                   </div>
                   
                   {/* שדה הערות */}
