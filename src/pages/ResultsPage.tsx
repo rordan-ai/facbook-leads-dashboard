@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
 import { useLanguage } from '../context/LanguageContext'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { Button } from '../components/ui/button'
-import { Textarea } from '../components/ui/textarea'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../components/ui/dialog'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../components/ui/dialog'
 
 interface Candidate {
   id: number
@@ -119,19 +118,8 @@ const statusLabels = {
   }
 }
 
-const getStatusColor = (status: string) => {
-  switch(status) {
-    case 'relevant': return 'bg-blue-500/20 text-blue-300 border-blue-500/30'
-    case 'interview': return 'bg-orange-500/20 text-orange-300 border-orange-500/30'
-    case 'hired': return 'bg-green-500/20 text-green-300 border-green-500/30'
-    case 'irrelevant': return 'bg-red-500/20 text-red-300 border-red-500/30'
-    default: return 'bg-gray-500/20 text-gray-300 border-gray-500/30'
-  }
-}
-
 export function ResultsPage() {
-  console.log('ResultsPage rendering - NEW VERSION')
-  const { t, language } = useLanguage()
+  const { language } = useLanguage()
   const [candidates, setCandidates] = useState<Candidate[]>(mockCandidates)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCandidate, setSelectedCandidate] = useState<number | null>(null)
@@ -147,21 +135,17 @@ export function ResultsPage() {
     candidate.phone.includes(searchTerm)
   )
 
-  const updateCandidateStatus = (index: number, status: 'unchecked' | 'relevant' | 'irrelevant' | 'interview' | 'hired') => {
+  const updateCandidateStatus = (index: number, status: Candidate['status']) => {
     setCandidates(prev => prev.map((candidate, i) => 
       i === index ? { ...candidate, status } : candidate
     ))
-    closeDialog()
+    setIsDialogOpen(false)
+    setSelectedCandidate(null)
   }
 
   const openStatusDialog = (candidateIndex: number) => {
     setSelectedCandidate(candidateIndex)
     setIsDialogOpen(true)
-  }
-
-  const closeDialog = () => {
-    setIsDialogOpen(false)
-    setSelectedCandidate(null)
   }
 
   return (
