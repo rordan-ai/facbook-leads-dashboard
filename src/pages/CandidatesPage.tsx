@@ -181,8 +181,11 @@ export function CandidatesPage() {
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <span>Phone:</span>
-                    <a href={`tel:${candidate.phone}`} className="text-blue-400 hover:underline">
-                      {candidate.phone}
+                    <a 
+                      href={`tel:${candidate.phone}`} 
+                      className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-md text-sm font-medium transition-colors inline-flex items-center gap-1"
+                    >
+                      📞 {candidate.phone}
                     </a>
                   </div>
                 </div>
