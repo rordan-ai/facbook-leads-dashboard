@@ -1,0 +1,1 @@
+- Supabase מ-30/10/2026 — כל `create table` ב-public חייב GRANT מפורש באותה מיגרציה (authenticated + service_role; anon רק לפי צורך לפי ה-RLS; לא `grant all on all tables` — מבטל revokes מכוונים). גם פונקציה חדשה (grant execute) ו-sequence חדש. השומר `.claude/supabase-grant-guard.js` מזהיר.

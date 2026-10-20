@@ -1,0 +1,4 @@
+{
+  "type": "commonjs",
+  "//": "Keeps .claude/*.js hooks (check-ibi-billing.js, guard-production-push.js) as CommonJS even though the root package.json sets \"type\":\"module\" for the Vite app. Do not remove — removing it breaks the session hooks."
+}
